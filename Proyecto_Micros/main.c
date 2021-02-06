@@ -139,13 +139,13 @@ static void MX_I2C1_Init(void);
 uint32_t IC_Val1 = 0;			//Tiempo inicial de la espera de la señal
 uint32_t IC_Val2 = 0;			//Tiempo final de la espera de la señal
 uint32_t Difference = 0; 		//Diferencia entre los dos tiempos anteriormente definidos
-uint8_t Is_First_Captured = 0;  // Flag para detectar si es primera o segunda captura dentro de una medicion
+uint8_t Is_First_Captured = 0;          //Flag para detectar si es primera o segunda captura dentro de una medicion
 uint8_t Distance  = 0;			//Distancia medida (Baja resolucion)
-volatile float d=0;				//Distancia medida con mas resolucion
+volatile float d = 0;			//Distancia medida con mas resolucion
 
 //-----Variable auxiliar para el ultrasonidos
 uint32_t ultrasound_counter;		//Me permetira saber si puedo leer o no
-int car_presence = 0;	// 0->No hay coche -------  1->Hay coche
+int car_presence = 0;	                // 0->No hay coche -------  1->Hay coche
 
 
 //-------Variables para los botones--------------------------------------------------------
@@ -168,13 +168,13 @@ int button_counter_3 = 0;
 volatile int button_4 = 0;
 uint32_t counter_4 = 0;
 int button_counter_4 = 0;
-volatile int luz_on = 0; //0->OFF-------1->ON
+volatile int luz_on = 0;        	//0->OFF ----- 1->ON
 
 //-----Boton del servomotor
 volatile int button_5 = 0;
 uint32_t counter_5 = 0;
 int button_counter_5 = 0;
-int puerta_abierta = 0;		//0->Puerta abierta --- 1->Puerta cerrada
+int puerta_abierta = 0;			//0->Puerta abierta --- 1->Puerta cerrada
 
 int flag_button = 0;
 uint32_t flag_counter = 0;
@@ -186,7 +186,7 @@ uint16_t counter_esp;
 
 //------Variable para los pines del analogico digitales------------------------------------
 volatile uint8_t adc1;		//Lectura del pin CHANNEL->8   LDR
-uint8_t adc2;		//Lectura del pin CHANNEL->9   TEMPERATURA
+uint8_t adc2;			//Lectura del pin CHANNEL->9   TEMPERATURA
 
 //------Variable para la lectura del acelerometro------------------------------------------
 uint8_t spiTxBuf[2];
@@ -269,7 +269,7 @@ void delay (uint16_t time){
 
 //--------Funcion de llamada al sensor para que mida-----------------------------------
 void HCSR04_Read (void){
-	HAL_GPIO_WritePin(TRIGGER_PORT, TRIGGER_PIN, GPIO_PIN_SET);  // pull the TRIG pin HIGH
+	HAL_GPIO_WritePin(TRIGGER_PORT, TRIGGER_PIN, GPIO_PIN_SET);    // pull the TRIG pin HIGH
 	delay(10);  // wait for 10 us
 	HAL_GPIO_WritePin(TRIGGER_PORT, TRIGGER_PIN, GPIO_PIN_RESET);  // pull the TRIG pin low
 
@@ -287,7 +287,7 @@ int antirebote(GPIO_TypeDef* GPIO,uint16_t GPIO_Pin,int boton,int contador_boton
 			else{
 				contador_boton++;
 			}
-			if (contador_boton==3){ //Periodo antirebotes
+			if (contador_boton==3){        //Periodo antirebotes
 				contador_boton=0;
 				contador=HAL_GetTick();
 				boton=0;
@@ -362,29 +362,29 @@ int main(void)
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 
   //---------Inicializacion SPI------------------------------------------------
-    	spiRxBuf[0]=0x00;
-        spiRxBuf[1]=0x00;
+    spiRxBuf[0]=0x00;
+    spiRxBuf[1]=0x00;
 
-        //-----TRANSMITIR--------------------------------------------
-        //--Chip Select Low
-        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
-        //--Mandar datos
-        spiTxBuf[0]=0x20;		//Direccion del registro que quiero
-        spiTxBuf[1]=0x0F;		//El valor que quiero escribir m
-        HAL_SPI_Transmit(&hspi1,spiTxBuf,2,HAL_MAX_DELAY);
-        //--Chip Select High
-        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
+  //-----TRANSMITIR--------------------------------------------
+  //--Chip Select Low
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
+  //--Mandar datos
+    spiTxBuf[0]=0x20;		//Direccion del registro que quiero
+    spiTxBuf[1]=0x0F;		//El valor que quiero escribir m
+    HAL_SPI_Transmit(&hspi1,spiTxBuf,2,HAL_MAX_DELAY);
+  //--Chip Select High
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
 
-        //-----RECIBIR-----------------------------------------------
-        //--Chip Select Low
-        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
-        //--Mandar datos
-        spiTxBuf[0]=0x20|0x80;		//Enable read mode. Debo mandarle un 1 al primer bit del registro anterior
-        HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
-        //--Recibir datos
-        HAL_SPI_Receive(&hspi1,spiRxBuf,1,HAL_MAX_DELAY);
-        //SS High
-        HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
+  //-----RECIBIR-----------------------------------------------
+  //--Chip Select Low
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
+  //--Mandar datos
+    spiTxBuf[0]=0x20|0x80;		//Enable read mode. Debo mandarle un 1 al primer bit del registro anterior
+    HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
+  //--Recibir datos
+    HAL_SPI_Receive(&hspi1,spiRxBuf,1,HAL_MAX_DELAY);
+  //SS High
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
 
 
   //-----Variable auxiliar para el ultrasonidos
@@ -394,8 +394,8 @@ int main(void)
     counter_esp = HAL_GetTick();
 
   //-----Variable para el switch case ---------------------------------------------------------
-    volatile int estado = 0;	//Indica en que estado se esta
-
+    volatile int estado = 0;	//Indica en que estado se esta:
+				// 0->Modo Manual, 1->Modo Automatico, 2->Modo Terremoto
 
 
 
@@ -435,7 +435,7 @@ int main(void)
 
 
 	  switch (estado){
-	  case 0:
+	  case 0:    //Modo Manual
 		  HAL_GPIO_WritePin(MANUAL_MODE_PORT, MANUAL_MODE_PIN, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(AUTO_MODE_PORT, AUTO_MODE_PIN, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(PARTY_MODE_PORT, PARTY_MODE_PIN, GPIO_PIN_RESET);
@@ -459,7 +459,7 @@ int main(void)
 		  button_counter_4 = flag_button_counter; counter_4 = flag_counter;
 
 		  break;
-	  case 1:
+	  case 1:    //Modo Automatico
 		  HAL_GPIO_WritePin(MANUAL_MODE_PORT, MANUAL_MODE_PIN, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(AUTO_MODE_PORT, AUTO_MODE_PIN, GPIO_PIN_SET);
 		  HAL_GPIO_WritePin(PARTY_MODE_PORT, PARTY_MODE_PIN, GPIO_PIN_RESET);
@@ -479,7 +479,7 @@ int main(void)
 		  }
 
 		  break;
-	  case 2:
+	  case 2:    //Modo Terremoto
 		  HAL_GPIO_WritePin(MANUAL_MODE_PORT, MANUAL_MODE_PIN, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(AUTO_MODE_PORT, AUTO_MODE_PIN, GPIO_PIN_RESET);
 		  HAL_GPIO_WritePin(PARTY_MODE_PORT, PARTY_MODE_PIN, GPIO_PIN_SET);
@@ -554,48 +554,48 @@ int main(void)
 	  //----Lectura del acelerometro
 
 	  if(HAL_GetTick() - accel_counter > 250){
-	  		  //----EJE X-----
-				//--Chip Select Low
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
-				//--Transmitir datos
-				spiTxBuf[0]=0x29|0x80;		//Enable read mode
-				HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
-				//--Recibir datos
-				HAL_SPI_Receive(&hspi1,&accel_x,1,HAL_MAX_DELAY);
-				//--Chip Select High
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
+	  		//----EJE X-----
+			//--Chip Select Low
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
+			//--Transmitir datos
+			  spiTxBuf[0]=0x29|0x80;		//Enable read mode
+			  HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
+			//--Recibir datos
+			  HAL_SPI_Receive(&hspi1,&accel_x,1,HAL_MAX_DELAY);
+			//--Chip Select High
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
 
-				//----EJE Y-----
-				//--Chip Select Low
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
-				//--Transmitir datos
-				spiTxBuf[0]=0x2B|0x80;		//Enable read mode
-				HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
-				//--Recibir datos
-				HAL_SPI_Receive(&hspi1,&accel_y,1,HAL_MAX_DELAY);
-				//--Chip Select High
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
+			//----EJE Y-----
+			//--Chip Select Low
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
+			//--Transmitir datos
+			  spiTxBuf[0]=0x2B|0x80;		//Enable read mode
+			  HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
+			//--Recibir datos
+			  HAL_SPI_Receive(&hspi1,&accel_y,1,HAL_MAX_DELAY);
+			//--Chip Select High
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
 
-				//----EJE Z-----
-				//--Chip Select Low
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
-				//--Transmitir datos
-				spiTxBuf[0]=0x2D|0x80;		//Enable read mode
-				HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
-				//--Recibir datos
-				HAL_SPI_Receive(&hspi1,&accel_z,1,HAL_MAX_DELAY);
-				//--Chip Select High
-				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
+			//----EJE Z-----
+			//--Chip Select Low
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_RESET);
+			//--Transmitir datos
+			  spiTxBuf[0]=0x2D|0x80;		//Enable read mode
+			  HAL_SPI_Transmit(&hspi1,spiTxBuf,1,HAL_MAX_DELAY);
+			//--Recibir datos
+			  HAL_SPI_Receive(&hspi1,&accel_z,1,HAL_MAX_DELAY);
+			//--Chip Select High
+			  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3,GPIO_PIN_SET);
 
-				//HAL_Delay(100);
+			//HAL_Delay(100);
 
-				accel_counter = HAL_GetTick();
+			  accel_counter = HAL_GetTick();
 
 
-				if((accel_x < -10) || (accel_x > 10)){ alarma_terremoto = 1;}
-				else if((accel_y < -10) || (accel_y > 10)){	alarma_terremoto = 1;}
-				else if((accel_z < -10) || (accel_z > 10)){	alarma_terremoto = 1;}
-				if(alarma_terremoto == 1){	estado = 2;}
+			  if((accel_x < -10) || (accel_x > 10)){ alarma_terremoto = 1;}
+			  else if((accel_y < -10) || (accel_y > 10)){	alarma_terremoto = 1;}
+			  else if((accel_z < -10) || (accel_z > 10)){	alarma_terremoto = 1;}
+			  if(alarma_terremoto == 1){	estado = 2;}
 	  }
 
 	  //----------------------------ENVIO DE DATOS----------------------
